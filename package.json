@@ -8,13 +8,17 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:ct": "playwright test -c playwright-ct.config.ts",
+    "test:ct:ui": "playwright test -c playwright-ct.config.ts --ui"
   },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/experimental-ct-react": "^1.49.0",
+    "@playwright/test": "^1.65.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
