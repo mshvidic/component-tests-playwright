@@ -1,35 +1,55 @@
 # Restful-Booker App
 
-React + TypeScript (Vite) front end for the [Restful-Booker API](https://restful-booker.herokuapp.com/apidoc/index.html): browse, search, create, edit and delete bookings.
+React + TypeScript (Vite) front end for the [Restful-Booker API](https://restful-booker.herokuapp.com/apidoc/index.html): browse, search, create, edit and delete bookings. Includes Playwright component tests.
 
-## Quick start
+## Prerequisites
 
-Requires Node.js 18+.
+- Node.js 18 or newer
+- Internet access (the app calls the public Restful-Booker API; the component tests don't need it)
+
+## Setup (once)
 
 ```bash
 npm install
-npm run dev     # http://localhost:5173
+npx playwright install chromium
 ```
 
-Log in with `admin` / `password123` to enable edit and delete.
+The second command downloads the browser that the component tests use.
 
-Other scripts: `npm run build` (type-check and build), `npm run preview` (serve the build; it has no API proxy, so use `dev` to see live data).
-
-## Component tests
-
-Playwright component tests (`@playwright/experimental-ct-react`) live in `tests/component`, next to `src`.
+## Run the app
 
 ```bash
-npx playwright install chromium   # once
-npm run test:ct                   # run all component tests
-npm run test:ct:ui                # interactive UI mode
+npm run dev
 ```
+
+Open **http://localhost:5173**. Log in with `admin` / `password123` to enable edit and delete.
+
+## Run the component tests
+
+```bash
+npm run test:ct          # run all tests in the terminal
+npm run test:ct:ui       # interactive UI mode
+npx playwright test -c playwright-ct.config.ts --headed   # watch the tests in a real browser window
+npx playwright show-report   # open the HTML report of the last run
+```
+
+Tip: add `--workers=1` to the `--headed` command to run one test at a time, which is easier to follow.
+
+You do **not** need to start the app first. Playwright starts its own dev server on port 3100 (change `ctPort` in `playwright-ct.config.ts` if it is taken).
+
+Tests live in `tests/component`, next to `src`:
 
 | Spec | Covers |
 | --- | --- |
 | `BookingCard.spec.tsx` | Display (name, id, dates, nights, price, deposit badge, needs), Edit / Delete visibility by permission, edit callback, delete confirm and cancel |
 
-Config is in `playwright-ct.config.ts`; `playwright/index.tsx` loads the app styles for every test.
+## Other scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Serve the build (no API proxy, so use `dev` for live data) |
+| `npm run typecheck` | Type-check only |
 
 ## Components
 
@@ -54,7 +74,17 @@ src/
 └── utils/         # validation and formatting
 tests/
 └── component/     # Playwright component tests
+playwright/        # component test page setup (loads app styles)
 ```
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| `playwright is not recognized` | Run `npm install` (delete `node_modules` first if it persists) |
+| "Executable doesn't exist" / "run npx playwright install" | Run `npx playwright install chromium` |
+| Port 3100 or 5173 already in use | Close the other process, or run the app with `npm run dev -- --port 3000` |
+| "API unavailable" badge and an empty list | Your machine can't reach `restful-booker.herokuapp.com`; check your connection or VPN |
 
 ## Notes
 
